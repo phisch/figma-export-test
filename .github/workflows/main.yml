@@ -12,8 +12,8 @@ jobs:
         id: figma_export
         uses: phisch/cursor-theme-generator/actions/figma-export@master
         with:
-          access_token: ${{ secrets.FIGMA_ACCESS_TOKEN }}
-          file_key: ${{ secrets.FIGMA_FILE_KEY }}
+          access_token: ${{ secrets.ACCESS_TOKEN }}
+          file_key: ${{ secrets.FILE_KEY }}
           theme_name: 'Exported Cursor Theme'
           theme_author: 'phisch'
           theme_comment: 'This is just a little test.'
