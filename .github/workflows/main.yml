@@ -1,0 +1,38 @@
+on: workflow_dispatch
+
+jobs:
+  figma-export:
+    runs-on: ubuntu-latest
+    name: Testing different actions from phisch/cursor-theme-generator
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Export `cursor-theme.json` and assets from Figma
+        id: figma_export
+        uses: phisch/cursor-theme-generator/actions/figma-export@master
+        with:
+          access_token: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+          file_key: ${{ secrets.FIGMA_FILE_KEY }}
+          theme_name: 'Exported Cursor Theme'
+          theme_author: 'phisch'
+          theme_comment: 'This is just a little test.'
+          target_directory: 'export'
+          inline_sprites: false
+
+      - name: Validate `cursor-theme.json`
+        uses: phisch/cursor-theme-generator/actions/validate-cursor-theme@master
+        with:
+          cursor_theme_json: 'export/cursor-theme.json'
+
+      - name: Update source files
+        run: |
+          rm -rf src
+          mv export src
+          
+      - name: Push updated source files
+        uses: EndBug/add-and-commit@v7
+        with:
+          add: 'src'
+          default_author: github_actor
+          message: 'updated source from figma file version ${{ steps.figma_export.outputs.version }}'
